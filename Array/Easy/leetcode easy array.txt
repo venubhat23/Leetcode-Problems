@@ -1,0 +1,409 @@
+1. Pascal's Triangle
+
+Given an integer numRows, return the first numRows of Pascal's triangle.
+
+In Pascal's triangle, each number is the sum of the two numbers directly above it as shown:
+Example 1:
+
+Input: numRows = 5
+Output: [[1],[1,1],[1,2,1],[1,3,3,1],[1,4,6,4,1]]
+Example 2:
+
+Input: numRows = 1
+Output: [[1]]
+
+solution:-- 
+class Solution:
+    def generate(self, numRows: int) -> List[List[int]]:
+        if numRows==0:
+            return []
+        elif numRows==1:
+            return [[1]]
+        preRow=self.generate(numRows-1)
+        newRow=[1]*numRows
+        for i in range(1,numRows-1):
+            newRow[i]=preRow[-1][i-1] + preRow[-1][i]
+        preRow.append(newRow)
+        return preRow
+
+-------------------------------------------------------------------------------------------------------------
+2. Single Number
+
+Given a non-empty array of integers nums, every element appears twice except for one. Find that single one.
+
+You must implement a solution with a linear runtime complexity and use only constant extra space.
+
+ 
+
+Example 1:
+
+Input: nums = [2,2,1]
+Output: 1
+Example 2:
+
+Input: nums = [4,1,2,1,2]
+Output: 4
+Example 3:
+
+Input: nums = [1]
+Output: 1
+
+solution:--
+
+from collections import Counter
+class Solution:
+    def singleNumber(self, nums: List[int]) -> int:
+        # if len(nums)==1:
+        #     return nums[0]
+        # counter=Counter(nums)
+        # for num,val in counter.items():
+        #     if val==1:
+        #         return num
+        res=0
+        for i in nums:
+            res^=i
+        return res
+
+---------------------------------------------------------------------------------------------------------------------
+3. Missing Number
+Given an array nums containing n distinct numbers in the range [0, n], return the only number in the range that is missing from the array.
+
+Example 1:
+
+Input: nums = [3,0,1]
+Output: 2
+Explanation: n = 3 since there are 3 numbers, so all numbers are in the range [0,3]. 2 is the missing number in the range since it does not appear in nums.
+Example 2:
+
+Input: nums = [0,1]
+Output: 2
+Explanation: n = 2 since there are 2 numbers, so all numbers are in the range [0,2]. 2 is the missing number in the range since it does not appear in nums.
+Example 3:
+
+Input: nums = [9,6,4,2,3,5,7,0,1]
+Output: 8
+Explanation: n = 9 since there are 9 numbers, so all numbers are in the range [0,9]. 8 is the missing number in the range since it does not appear in nums.
+
+solution:--
+class Solution:
+    def missingNumber(self, nums: List[int]) -> int:
+        n=len(nums)
+        sum=(n*(n+1))//2
+        ssum=0
+        for i in nums:
+            ssum+=i
+        res=sum-ssum
+        return res
+
+-------------------------------------------------------------------------------------------------------------------------
+4. Majority Element
+
+Given an array nums of size n, return the majority element.
+
+The majority element is the element that appears more than ⌊n / 2⌋ times. You may assume that the majority element always exists in the array.
+
+Example 1:
+
+Input: nums = [3,2,3]
+Output: 3
+Example 2:
+
+Input: nums = [2,2,1,1,1,2,2]
+Output: 2
+
+solution:--
+from collections import Counter
+class Solution:
+    def majorityElement(self, nums: List[int]) -> int:
+        counter=Counter(nums)
+        n=len(nums)
+        for num,count in counter.items():
+            if count> (n/2):
+                return num
+
+--------------------------------------------------------------------------------------------------------------------------
+5. Move Zeroes
+
+Given an integer array nums, move all 0's to the end of it while maintaining the relative order of the non-zero elements.
+
+Note that you must do this in-place without making a copy of the array.
+
+Example 1:
+
+Input: nums = [0,1,0,3,12]
+Output: [1,3,12,0,0]
+Example 2:
+
+Input: nums = [0]
+Output: [0]
+
+solution:--
+class Solution:
+    def moveZeroes(self, nums: List[int]) -> None:
+        for i in nums:
+            if i==0:
+                nums.remove(i)
+                nums.append(0)
+        return nums
+     
+--------------------------------------------------------------------------------------------------------------------
+6. Contains Duplicate
+
+Given an integer array nums, return true if any value appears at least twice in the array, and return false if every element is distinct.
+
+Example 1:
+
+Input: nums = [1,2,3,1]
+Output: true
+Example 2:
+
+Input: nums = [1,2,3,4]
+Output: false
+Example 3:
+
+Input: nums = [1,1,1,3,3,4,3,2,4,2]
+Output: true
+
+solution:--
+
+class Solution:
+    def containsDuplicate(self, nums: List[int]) -> bool:
+        seen=set()
+        for num in nums:
+            if num in seen:
+                return True
+            seen.add(num)
+        return False
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+7.Intersection of Two Arrays II
+
+Given two integer arrays nums1 and nums2, return an array of their intersection. Each element in the result must appear as many times as it shows in both arrays and you may return the result in any order.
+
+Example 1:
+
+Input: nums1 = [1,2,2,1], nums2 = [2,2]
+Output: [2,2]
+Example 2:
+
+Input: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+Output: [4,9]
+solution:--
+
+class Solution:
+    def intersect(self, nums1: List[int], nums2: List[int]) -> List[int]:
+
+        arr = []
+        
+        # Iterate over the shorter list
+        if len(nums1) < len(nums2):
+            for num in nums1:
+                if num in nums2:
+                    arr.append(num)
+                    nums2.remove(num)
+        
+        elif len(nums2) <= len(nums1):
+            for num in nums2:
+                if num in nums1:
+                    arr.append(num)
+                    nums1.remove(num)
+        
+        return arr
+
+***ALternate solution (using sort then two pointers):--
+class Solution:
+    def intersect(self, nums1: List[int], nums2: List[int]) -> List[int]:
+        nums1.sort()
+        nums2.sort()
+        
+        ans = []
+        i = j = 0
+        while i < len(nums1) and j < len(nums2):
+            if nums1[i] < nums2[j]:
+                i += 1
+            elif nums1[i] > nums2[j]:
+                j += 1
+            else:
+                ans.append(nums1[i])
+                i += 1
+                j += 1
+        return ans
+
+------------------------------------------------------------------------------------------------------------------------------------
+8.Best Time to Buy and Sell Stock
+
+You are given an array prices where prices[i] is the price of a given stock on the ith day.
+
+You want to maximize your profit by choosing a single day to buy one stock and choosing a different day in the future to sell that stock.
+
+Return the maximum profit you can achieve from this transaction. If you cannot achieve any profit, return 0.
+
+ 
+
+Example 1:
+
+Input: prices = [7,1,5,3,6,4]
+Output: 5
+Explanation: Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6-1 = 5.
+Note that buying on day 2 and selling on day 1 is not allowed because you must buy before you sell.
+Example 2:
+
+Input: prices = [7,6,4,3,1]
+Output: 0
+Explanation: In this case, no transactions are done and the max profit = 0.
+
+solution:--
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        mini=prices[0]
+        maxi=0
+        for price in prices:
+            mini=min(mini,price)
+            maxi=max(maxi,price-mini)
+        return maxi
+        
+------------------------------------------------------------------------------------------------------------------------------------
+9.Two Sum
+
+Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
+
+You may assume that each input would have exactly one solution, and you may not use the same element twice.
+
+You can return the answer in any order.
+Example 1:
+
+Input: nums = [2,7,11,15], target = 9
+Output: [0,1]
+Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].
+Example 2:
+
+Input: nums = [3,2,4], target = 6
+Output: [1,2]
+Example 3:
+
+Input: nums = [3,3], target = 6
+Output: [0,1]
+
+solution:--
+
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        for i in range(len(nums)):
+            for j in range(i+1,len(nums)):
+                if nums[i]+nums[j]==target:
+                    return [i,j]
+
+------------------------------------------------------------------------------------------------------------------------------------
+10.Merge Sorted Array
+
+You are given two integer arrays nums1 and nums2, sorted in non-decreasing order, and two integers m and n, representing the number of elements in nums1 and nums2 respectively.
+
+Merge nums1 and nums2 into a single array sorted in non-decreasing order.
+
+The final sorted array should not be returned by the function, but instead be stored inside the array nums1. To accommodate this, nums1 has a length of m + n, where the first m elements denote the elements that should be merged, and the last n elements are set to 0 and should be ignored. nums2 has a length of n.
+
+Example 1:
+
+Input: nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3
+Output: [1,2,2,3,5,6]
+Explanation: The arrays we are merging are [1,2,3] and [2,5,6].
+The result of the merge is [1,2,2,3,5,6] with the underlined elements coming from nums1.
+Example 2:
+
+Input: nums1 = [1], m = 1, nums2 = [], n = 0
+Output: [1]
+Explanation: The arrays we are merging are [1] and [].
+The result of the merge is [1].
+Example 3:
+
+Input: nums1 = [0], m = 0, nums2 = [1], n = 1
+Output: [1]
+Explanation: The arrays we are merging are [] and [1].
+The result of the merge is [1].
+Note that because m = 0, there are no elements in nums1. The 0 is only there to ensure the merge result can fit in nums1.
+
+solution:--
+class Solution:
+    def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
+    # Declare a 3rd array and 2 pointers:
+        arr3 = [0] * (n + m)
+        left = 0
+        right = 0
+        index = 0
+
+        # Insert the elements from the 2 arrays
+        # into the 3rd array using left and right
+        # pointers:
+        while left < m and right < n:  # Corrected the loop conditions
+            if nums1[left] <= nums2[right]:
+                arr3[index] = nums1[left]
+                left += 1
+            else:
+                arr3[index] = nums2[right]
+                right += 1
+            index += 1
+
+        # If right pointer reaches the end:
+        while left < m:
+            arr3[index] = nums1[left]
+            left += 1
+            index += 1
+
+        # If left pointer reaches the end:
+        while right < n:
+            arr3[index] = nums2[right]
+            right += 1
+            index += 1
+
+        # Fill back the elements from arr3[]
+        # to nums1[]:
+        for i in range(m + n):  # Corrected the loop range
+            nums1[i] = arr3[i]
+---------------------------------------------------------------------------------------------------
+11.Plus One
+
+You are given a large integer represented as an integer array digits, where each digits[i] is the ith digit of the integer. The digits are ordered from most significant to least significant in left-to-right order. The large integer does not contain any leading 0's.
+
+Increment the large integer by one and return the resulting array of digits.
+
+ 
+
+Example 1:
+
+Input: digits = [1,2,3]
+Output: [1,2,4]
+Explanation: The array represents the integer 123.
+Incrementing by one gives 123 + 1 = 124.
+Thus, the result should be [1,2,4].
+Example 2:
+
+Input: digits = [4,3,2,1]
+Output: [4,3,2,2]
+Explanation: The array represents the integer 4321.
+Incrementing by one gives 4321 + 1 = 4322.
+Thus, the result should be [4,3,2,2].
+Example 3:
+
+Input: digits = [9]
+Output: [1,0]
+Explanation: The array represents the integer 9.
+Incrementing by one gives 9 + 1 = 10.
+Thus, the result should be [1,0].
+
+solution:--
+class Solution:
+    def plusOne(self, digits: List[int]) -> List[int]:
+        # res=""
+        # for i in digits:
+        #     s=str(i)
+        #     res+=s
+        # n=int(res)+1
+        # return [int(digit) for digit in str(n)]
+        res=0
+        while(len(digits)>0):
+            res=res*10+digits[0]
+            digits.remove(digits[0])
+        result=res+1
+        return [int(i) for i in str(result)]
+------------------------------------------------------------------------------------
+	
